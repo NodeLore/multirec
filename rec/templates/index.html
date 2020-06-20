@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>多元化电影推荐系统</title>
+		<meta http-equiv="Content-Type" content='text/html;charset=utf8' />
+		<meta name="referrer" content="no-referrer"/>
+		<script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+		<script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+		<script type='text/javascript' src="{% static 'js/grade.js' %}"></script>
+		<link type='text/css' rel='stylesheet' href="{% static 'css/index.css' %}"/>
+	</head>
+
+	<body class='gradient-wrap'>
+		<img src='{{movie.cover}}' id='coverImg' crossorigin="anonymous"  alt='' />
+		<div id='mask'></div>
+		<div id='search'>
+			<input type='text' id='searchInput' placeholder="输入要搜索的电影关键字" />
+			<div id='searchBtn' title='检索'></div>
+		</div>
+		<div id='resultPanel' class='modalWin'>
+			<div id='searchKey'>关键词 <b>123</b> 的搜索结果</div>
+			<hr>
+			<ul>
+			</ul>
+		</div>
+		<div id='app'>
+			<div id='recommendBtn' title='开始推荐'></div>
+			<div id='titleArea' style='font-size: 30px; line-height: 30px;' value="{{movie.key}}">
+				{{movie.title}}
+			</div>
+
+			<div id='scoreArea'>
+				{% for x in movie.score %}
+					<div class='starFilled'></div>
+				{% endfor %}
+				
+				{% for x in movie.subscore %}
+					<div class='star'></div>
+				{% endfor %}
+
+			</div>
+			<div id='directorArea'>
+				<p>导演</p>
+				<hr>
+				<ul>
+					{% for d in movie.director %}
+						<li value='{{d.key}}'>{{d.name}}</li>
+					{% endfor %}
+				</ul>
+				<hr>
+			</div>
+			<div id='castArea'>
+				<p>演员</p>
+				<hr>
+				<ul>
+					{% for d in movie.cast %}
+						<li value='{{d.key}}'>{{d.name}}</li>
+					{% endfor %}
+				</ul>
+				<hr>
+			</div>
+			<div id='tagArea'>
+				{% for t in movie.tag %}
+					<div class='movieTag' title='据此推荐'>{{t}}</div>
+				{% endfor %}
+			</div>
+
+			<div id='plotArea'>
+				<p id='plotLabel'>简介</p>
+				<p id='plotContent'>{{movie.storyline}}</p>
+			</div>
+
+		</div>
+
+		<div id='information' class='modalWin'>
+			<p class='infoTag' id='infoName'></p>
+			<p class='infoTag' id='infoRole'></p>
+			<p class='infoTag' id='infoHistory'>作品</p>
+			<hr>
+			<ul>
+			</ul>
+			<hr>
+			<div id='personRec'>据此推荐</div>
+		</div>
+
+		<div id='modelSelect'>
+			<div value='ArangoDB' class='selected'>ArangoDB</div>
+			<div value='JCA'>Joint Collaborative Autoencoder</div>
+		</div>
+
+		<div id='recommendResult' class='modalWin'>
+			<div>使用 <b id='modelName'>李四</b> 模型</div>
+			<div>根据 <b id='recKey'>张三</b> 的推荐结果：</div>
+			<div class='resultItem' value='李四'>张三</div>
+			
+		</div>
+	</body>
+</html>
