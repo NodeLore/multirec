@@ -302,7 +302,7 @@ def recommendByGraphStory(key):
         #print(word)
         #print('for i in search_ SEARCH PHRASE(i.storyline, "' + word + '", "text_zh") SORT TFIDF(i) desc LIMIT 5 RETURN i._from')
         try:
-            result = db.fetch_list('for i in search_ SEARCH PHRASE(i.storyline, "' + word + '", "text_zh") SORT TFIDF(i) desc LIMIT 5 RETURN {"name": i.name, "key": i._key}')
+            result = db.fetch_list('for i in search_ SEARCH PHRASE(i.storyline, "' + word + '", "text_zh") and i.rating != 0 SORT TFIDF(i) desc LIMIT 5 RETURN {"name": i.name, "key": i._key}')
         except Exception:
             result = []
         for r in result:
@@ -358,47 +358,50 @@ def getKeyFromDict(dct, keys):
             break
     return result
 
+jca = None
 def recommendByJCA(key):
+    global jca
     retResult = []
     with open('utils/movie.pkl', 'rb') as f:
         movie = pickle.load(f)
     mIndex = movie[int(key)]
-
-    neg_sample_rate = 1
-
-    date = time.strftime('%y-%m-%d', time.localtime())
-    current_time = time.strftime('%H_%M_%S', time.localtime())
-    data_name = 'ml-1m'
-    base = 'u'
-
-    args = DottableDict()
-    args.allowDotting()
-    args.train_epoch = 10
-    args.batch_size = 300
-    args.display_step = 1
-    args.lr = 0.003
-    args.lambda_value = 0.001
-    args.margin = 0.15
-    args.optimizer_method = 'Adam'
-    args.g_act = 'Sigmoid'
-    args.f_act = 'Sigmoid'
-    args.U_hidden_neuron = 160
-    args.I_hidden_neuron = 160
-    args.base = base
-    args.neg_sample_rate = neg_sample_rate
-
-    sess = tf.Session()
-
     nrows = 6027
     ncols = 3062
-    train_R = np.zeros((nrows, ncols))
-    test_R = np.zeros((nrows, ncols))
+    
+    if jca == None:
+        neg_sample_rate = 1
 
-    metric_path = './metric_results_test/' + date
-    if not os.path.exists(metric_path):
-        os.makedirs(metric_path)
-    metric_path = metric_path + '/JCA_' + str(current_time)
-    jca = JCA(sess, args, train_R, test_R, metric_path, date, data_name)
+        date = time.strftime('%y-%m-%d', time.localtime())
+        current_time = time.strftime('%H_%M_%S', time.localtime())
+        data_name = 'ml-1m'
+        base = 'u'
+
+        args = DottableDict()
+        args.allowDotting()
+        args.train_epoch = 10
+        args.batch_size = 300
+        args.display_step = 1
+        args.lr = 0.003
+        args.lambda_value = 0.001
+        args.margin = 0.15
+        args.optimizer_method = 'Adam'
+        args.g_act = 'Sigmoid'
+        args.f_act = 'Sigmoid'
+        args.U_hidden_neuron = 160
+        args.I_hidden_neuron = 160
+        args.base = base
+        args.neg_sample_rate = neg_sample_rate
+
+        sess = tf.Session()
+
+        train_R = np.zeros((nrows, ncols))
+        test_R = np.zeros((nrows, ncols))
+
+        metric_path = './metric_results_test/' + date
+        if not os.path.exists(metric_path):
+            os.makedirs(metric_path)
+        metric_path = metric_path + '/JCA_' + str(current_time)
+        jca = JCA(sess, args, train_R, test_R, metric_path, date, data_name)
 
     denominator = int(mIndex) / ncols
     index = int(mIndex) % ncols

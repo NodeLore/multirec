@@ -513,3 +513,41 @@ hr{
     font-weight: bold;
     box-shadow: 0 0 2px 2px rgba(255, 255, 255, .8);
 }
+
+#loading{
+    height: 100%;
+    width: 100%;
+    z-index: 2000;
+    background: rgba(1, 1, 1, .6);
+    left: 0;
+    top: 0;
+    position: absolute;
+    display: none;
+}
+
+#loading div{
+    height: 120px;
+    width: 120px;
+    border-radius: 50%;
+    border: 2px solid red;
+    border-bottom-color: transparent;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-top: -60px;
+    margin-left: -60px;
+    animation: load 0.75s linear infinite;
+}
+
+@keyframes load
+{
+	0%{
+		transform: rotate(0deg);
+	}
+	50%{
+		transform: rotate(180deg);
+	}
+	100%{
+		transform: rotate(360deg);
+	}
+}

@@ -11,9 +11,7 @@ def recommendMovie(requests):
     model = requests.GET.get("model")
     recType = requests.GET.get("type")
     key = requests.GET.get("key")
-    print(model)
-    print(recType)
-    print(key)
+    
     if recType == "tag":
         return HttpResponse(json.dumps({'result': recommend.recommendByGraphAttr(recType, key)}), content_type='application/json')
     elif recType == "person":

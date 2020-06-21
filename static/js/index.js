@@ -33,6 +33,7 @@ function setSize(tArea){
 }
 
 function recommendMovie(type, key){
+    $('#loading').show()
     if(type == 'storyline'){
         $('#modelName').text(model)
         $('#recKey').text($('#titleArea').text().split('/')[0].trim())
@@ -58,6 +59,7 @@ function recommendMovie(type, key){
                     divItem.attr('value', item.key)
                     
                     $(divItem).click(function(){
+                        $('#loading').show()
                         location.href = '/movie/?key=' + item.key
                     })
 
@@ -66,6 +68,7 @@ function recommendMovie(type, key){
                 $('#mask').show()
                 $('#recommendResult').fadeIn()
             }
+            $('#loading').hide()
         }
     })
 }
@@ -75,7 +78,6 @@ function updatePerson(key){
         type: 'GET',
         url: '/person/?key=' + key,
         success: function(data){
-            console.log(data)
             if(data['result'] && data['result'] != {}){
                 $('#infoName').text(data['result'].name)
                 $('#infoRole').text(data['result'].prof)
@@ -90,6 +92,7 @@ function updatePerson(key){
                     $('#information ul').append(liItem)
 
                     $(liItem).click(function(){
+                        $('#loading').show()
                         location.href = '/movie/?key=' + work.key
                     })
                 }
@@ -101,6 +104,7 @@ function updatePerson(key){
 }
 
 function updateByKeywords(word){
+    $('#loading').show()
     $.ajax({
         type: 'GET',
         url: '/search/?keyword=' + word,
@@ -116,12 +120,14 @@ function updateByKeywords(word){
                     $('#resultPanel ul').append(liItem)
                     
                     $(liItem).click(function(){
+                        $('#loading').show()
                         location.href = '/movie/?key=' + item.key
                     })
                 }
                 $('#mask').show()
                 $('#resultPanel').fadeIn()
             }
+            $('#loading').hide()
         }
     })
 }
